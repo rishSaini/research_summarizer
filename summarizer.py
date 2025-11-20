@@ -1,30 +1,44 @@
-from openai import OpenAI
+import os
+import json
 from dotenv import load_dotenv
+import google.generativeai as genai
 
 load_dotenv()
-client = OpenAI()
+
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise RuntimeError("GEMINI_API_KEY not set in .env")
+
+genai.configure(api_key=api_key)
 
 PROMPT_TEMPLATE = """
 You are a research assistant. Analyze the following article text.
 
-Return a JSON with:
-- summary (5–8 bullet points)
-- key_insights (3–5 bullets)
-- simplified (explain the article like I'm 5)
-- citations (what the model relied on)
-- quiz (3 short comprehension questions)
+Return a JSON object with keys:
+- summary: 5–8 bullet points
+- key_insights: 3–5 bullet points
+- simplified: explaining the article like I'm 5
+- citations: a list of references the model relied on
+- quiz: 3 short comprehension questions
 
 Article text:
 {{TEXT}}
+
+IMPORTANT:
+Return ONLY valid JSON. No backticks. No markdown. No explanation.
 """
 
-def summarize_text(text: str):
-    prompt = PROMPT_TEMPLATE.replace("{{TEXT}}", text[:4000])  # truncate for safety
+def summarize_text(text: str) -> str:
+    prompt = PROMPT_TEMPLATE.replace("{{TEXT}}", text[:6000])
 
-    completion = client.chat.completions.create(
-        model="gpt-4.1",  
-        messages=[{"role": "user", "content": prompt}],
-        response_format={"type": "json_object"}
+    model = genai.GenerativeModel("gemini-flash-latest")  
+
+    result = model.generate_content(
+        prompt,
+        generation_config={
+            "response_mime_type": "application/json"
+        }
     )
 
-    return completion.choices[0].message.content
+    # Gemini returns a text string that should already be JSON
+    return result.text
