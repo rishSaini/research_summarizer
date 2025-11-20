@@ -1,0 +1,51 @@
+# -------------------------
+# Python
+# -------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.log
+
+# Byte-compiled / cached files
+.cache/
+.python-version
+
+# -------------------------
+# Virtual Environment
+# -------------------------
+venv/
+env/
+ENV/
+.venv/
+
+# -------------------------
+# Editors / IDEs
+# -------------------------
+.vscode/
+.idea/
+*.swp
+
+# -------------------------
+# OS-specific
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Local environment / secrets
+# -------------------------
+.env
+.env.*
+*.secret
+*.key
+
+# -------------------------
+# Build / Dist
+# -------------------------
+dist/
+build/
+pip-wheel-metadata/
