@@ -2,12 +2,10 @@ from fastapi import FastAPI
 from models import URLRequest, SummaryResponse
 from scraper import extract_text_from_url
 from summarizer import summarize_text
-from dotenv import load_dotenv
 import json
 
 
 app = FastAPI()
-load_dotenv()
 
 @app.post("/summarize", response_model=SummaryResponse)
 def summarize_article(req: URLRequest):
